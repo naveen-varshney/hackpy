@@ -1,0 +1,48 @@
+{%extends 'base.html'%}
+{%block content%}
+<div class="row" id="post_list">
+  {%for post in post_list %}
+  <div class="col-xs-12 col-sm-12 col-md-offset-4 col-md-4">
+    <div class="vcenter" style="box-shadow: 1px 1px 1px 1px #888888;">
+      <div class="card" style="padding:20px;">
+        <div class="card-block">
+          <h5 class="card-title">{{post.post_title}} <a href="{{post.post_link}}" target="_blank">({{post.post_link}})</a> <span id=like_{{post.id}} class="pull-right glyphicon glyphicon-heart-empty"></span><br><small class="text-muted"> By {{post.user}} <span>on</span> {{post.created_at}}</small></h5>
+          <p class="card-text">
+            <span class="pull-right">
+              <span class="text-muted">{{post.upvotes}}</span>
+              <span class="text-muted">Like  </span>
+              <span class="text-muted">{{post.comments}}</span><span class="text-muted">  Comment</span>
+            </span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  {%endfor%}
+</div>
+<div class="text-center">
+  <a href="{%url 'hackpy_app:post'%}" class="btn btn-success">Create Post</a>
+  <div class="row text-center">
+    <div class="pagination">
+      <span class="step-links">
+        {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+          Page {{ page_obj.number }} of {{ paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">next</a>
+        {% endif %}
+      </span>
+    </div>
+  </div>
+</div>
+<style media="screen">
+.vcenter {
+  margin: 15px 0px;
+}
+</style>
+{%endblock%}

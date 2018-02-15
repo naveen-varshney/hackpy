@@ -1,0 +1,38 @@
+{%extends 'base.html'%}
+{%block content%}
+<div class="row">
+  <div class="col-xs-12 col-sm-12 col-md-4 col-md-offset-4">
+    <form class="form" method="post">
+      {%csrf_token%}
+      {%for f in form%}
+      <div class="form-group">
+        <div class="input-group">
+
+          {% if forloop.counter == 1 %}
+          <span class="input-group-addon" id="basic-addon1"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></span>
+          {% endif %}
+          {% if forloop.counter == 2 %}
+          <span class="input-group-addon" id="basic-addon1"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span></span>
+          {% endif %}
+          {% if forloop.counter == 3 %}
+          <span class="input-group-addon" id="basic-addon1"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span></span>
+          {% endif %}
+          {{f}}
+        </div>
+        {% if f.errors %}
+        <div class="list-group">
+          {% for error in f.errors %}
+          <li class="list-group-item alert alert-danger"><strong>{{ error|escape }}</strong></li>
+          {% endfor %}
+        </div>
+        {% endif %}
+        {% if f.help_text %}
+        <span class="help">{{ field.help_text|safe }}</span>
+        {% endif %}
+      </div>
+      {%endfor%}
+      <input type="submit" name="SignUp" class="btn btn-primary">
+    </form>
+  </div>
+</div>
+{%endblock%}
