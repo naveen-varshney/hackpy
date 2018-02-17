@@ -1,0 +1,56 @@
+{%extends 'base.html'%}
+{%block content%}
+<div class="row">
+  <div class="col-md-offset-3 col-md-6">
+    <div class="">
+      <form id = "form-id" style="display:inline;" action="{% url 'hackpy_app:vote' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="post_id" value="{{post_detail.id}}">
+          <a href="#" onclick="document.forms['form-id'].submit();" >
+            <span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
+           </a>
+      </form>
+      <a href="{{ post_detail.post_link }}">{{ post_detail.post_title }}</a>
+      <div class="Link-detail">
+        <span>{{ post_detail.votes.count }} points</span> |
+        <span>submited by {{ post_detail.user }}</span> |
+        <a class="Link-link" href="{% url 'hackpy_app:post_detail' post_detail.id %}">{{ post_detail.comments.count }} comments</a>
+      </div>
+    </div>
+    <div class="row" style="margin:20px;">
+      <form class="form" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="post_id" value="{{ post_detail.id }}">
+        {{form}}
+        <div style="margin-top:10px">
+          <input type="submit" name="name" value="Comment" class="btn btn-primary" id="post_submit">
+        </div>
+      </form>
+    </div>
+    <div class="">
+      <ul class="list-group msg-list">
+        {%for com in comments%}
+        <blockquote>
+          <small class="text-muted"><a href="#">{{com.user.username}}</a> | <span>{{com.timestamp}}</span> </small>
+          <li class="list-group-item">{{com.comment_text}}</i>
+          </li>
+        </blockquote>
+        {% for reply in com.replies.all %}
+        <blockquote style="margin-left:10px">
+          <small class="text-muted"><a href="#">{{reply.user.username}}</a> | <span>{{reply.timestamp}}</span> </small>
+          <li class="list-group-item">{{reply.comment_text}}</i>
+          </li>
+        </blockquote>
+        {%endfor%}
+        {%endfor%}
+      </ul>
+    </div>
+  </div>
+</div>
+<style media="screen">
+.list-group-item{
+margin-top: 10px;
+overflow-wrap: break-word;
+}
+</style>
+{%endblock%}

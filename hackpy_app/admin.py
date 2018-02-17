@@ -6,3 +6,5 @@ from . import models
 
 # Register your models here.
 admin.site.register(models.UserPost)
+admin.site.register(models.PostComment)
+admin.site.register(models.PostVote)

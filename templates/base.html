@@ -24,8 +24,8 @@
           </div>
           <div class="collapse navbar-collapse" id="myNavbar">
             <ul class="nav navbar-nav navbar-right">
-              <li><a href="/">Home</a></li>
               {% if user.is_authenticated%}
+              <li><a href="{%url 'hackpy_app:post'%}">Post Link</a></li>
               <li><a href="{% url 'hackpy_app:logout' %}">Logout</a></li>
               <li><a href="#">{{user.username}}</a></li>
               {%else%}
@@ -39,7 +39,7 @@
       {%endblock%}
       {%block content%}
       <div class="row">
-        <h1>Index page</h1>
+        <h1>No Post here.</h1>
       </div>
       {%endblock%}
     </div>

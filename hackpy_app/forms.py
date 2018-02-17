@@ -15,6 +15,8 @@ class UserCreateForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super(UserCreateForm, self).__init__(*args, **kwargs)
         self.fields["username"].label = "Display name"
+        self.fields["password1"].label = "Password"
+        self.fields["password2"].label = "Password confirmation"
 
 
 class UserPostForm(forms.ModelForm):
@@ -33,3 +35,12 @@ class UserLoginForm(AuthenticationForm):
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control','placeholder':'Password'}))
     class Meta:
         model = User
+
+class UserCommentForm(forms.ModelForm):
+    """docstring for UserCommentForm."""
+    class Meta:
+        model = models.PostComment
+        fields = ('comment_text',)
+        widgets ={
+        'comment_text': forms.Textarea(attrs={'class':'form-control','rows' : '5','col' :'10','placeholder': 'Write a comment here..'}),
+        }
