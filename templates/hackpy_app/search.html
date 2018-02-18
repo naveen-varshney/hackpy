@@ -1,0 +1,62 @@
+{%extends 'base.html'%}
+{%block content%}
+<div class="row" style="margin:30px">
+  <form action="/search" method="get">
+      <input class="form-control" type="text" placeholder="Search" class="search-query span2" name="q">
+  </form>
+</div>
+<ol class="list-group">
+    {% for post in obj_list %}
+        <li class="list-group-item" style="margin-bottom:10px;">
+          <form id = "form-id" style="display:inline;" action="{% url 'hackpy_app:vote' %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="post_id" value="{{post.id}}">
+              <a href="#" onclick="document.forms['form-id'].submit();" >
+                <span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
+               </a>
+          </form>
+            <a href="{{ post.post_link }}">{{ post.post_title }}</a>
+            <div class="Link-detail">
+                <span>{{ post.votes.count }} points</span> |
+                <span>submited by {{ post.user }}</span> |
+                <a class="Link-link" href="{% url 'hackpy_app:post_detail' post.id %}">{{ post.comments.count }} comments</a>
+            </div>
+        </li>
+    {% endfor %}
+</ol>
+<div class="text-center">
+  <!-- <a href="{%url 'hackpy_app:post'%}" class="btn btn-success">Create Post</a> -->
+  <div class="row text-center">
+    <div class="pagination">
+      <span class="step-links">
+        {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+          Page {{ page_obj.number }} of {{ paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">next</a>
+        {% endif %}
+      </span>
+    </div>
+  </div>
+</div>
+<style media="screen">
+.vcenter {
+  margin: 15px 0px;
+}
+input[type=text] {
+    width: 130px;
+    -webkit-transition: width 0.4s ease-in-out;
+    transition: width 0.4s ease-in-out;
+}
+
+/* When the input field gets focus, change its width to 100% */
+input[type=text]:focus {
+    width: 100%;
+}
+</style>
+{%endblock%}

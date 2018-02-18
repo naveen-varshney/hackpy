@@ -14,6 +14,8 @@ from django.http import HttpResponse
 from django.http import JsonResponse
 from django.contrib.auth import authenticate, login
 from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 # Create your views here.
 class IndexView(ListView):
@@ -70,6 +72,7 @@ class UserLogin(LoginView):
     template_name = 'hackpy_app/login.html'
 
 
+@method_decorator(login_required, name = 'post')
 class PostDetail(CreateView,DetailView):
     """docstring for PostDetail."""
     model = models.UserPost
@@ -101,6 +104,7 @@ class PostDetail(CreateView,DetailView):
     def get_success_url(self):
         return reverse_lazy('hackpy_app:post_detail',args=(self.kwargs['pk'],))
 
+@login_required
 def upvote(request):
     print("====i called====")
     if request.method == "POST":
@@ -112,3 +116,12 @@ def upvote(request):
         vote.userpost = models.UserPost.objects.get(pk=post_id)
         vote.save()
         return HttpResponseRedirect(reverse('hackpy_app:index') )
+def search(request):
+    q = request.GET['q']
+    vector = SearchVector('post_title')
+    query = SearchQuery(q)
+    obj_list = models.UserPost.objects.annotate(rank=SearchRank(vector, query)).order_by('-rank')
+    context={
+    'obj_list' : obj_list
+    }
+    return render(request,'hackpy_app/search.html',context)

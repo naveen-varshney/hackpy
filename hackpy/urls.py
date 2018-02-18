@@ -20,4 +20,5 @@ from hackpy_app import views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^', include('hackpy_app.urls',namespace='hackpy_app')),
+    url(r'^search/', views.search,name='search'),
 ]
