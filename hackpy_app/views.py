@@ -24,18 +24,22 @@ class IndexView(ListView):
     paginate_by = 30
     template_name = 'hackpy_app/index.html'
     context_object_name='post_list'
+
 class EditPost(UpdateView):
     """docstring for UpdateView."""
     model = models.UserPost
     fields = ("post_title","post_link")
+
 class DeletePost(DeleteView):
     """docstring for DeletePost."""
     model = models.UserPost
     success_url = reverse_lazy('hackpy_app:index')
+
 class EditComment(UpdateView):
     """docstring for UpdateView."""
     model = models.PostComment
     fields = ("post_title","post_link")
+
 class DeleteComment(DeleteView):
     """docstring for DeletePost."""
     model = models.PostComment
@@ -106,16 +110,16 @@ class PostDetail(CreateView,DetailView):
 
 @login_required
 def upvote(request):
-    print("====i called====")
     if request.method == "POST":
-        print("====i in methode====")
         vote = models.PostVote()
         vote.user = request.user
         post_id = request.POST.get('post_id', '')
         print(post_id)
         vote.userpost = models.UserPost.objects.get(pk=post_id)
         vote.save()
-        return HttpResponseRedirect(reverse('hackpy_app:index') )
+        return HttpResponseRedirect(reverse('hackpy_app:index'))
+    return HttpResponseRedirect(reverse('hackpy_app:index'))
+
 def search(request):
     q = request.GET['q']
     vector = SearchVector('post_title')
