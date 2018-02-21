@@ -15,9 +15,11 @@ class User(User):
 class UserPost(models.Model):
     """docstring for UserPost."""
     user = models.ForeignKey('auth.User',related_name="post_user",on_delete=models.CASCADE)
-    post_title = models.CharField(max_length=100)
-    post_link = models.URLField()
+    post_title = models.CharField(max_length=400)
+    post_link = models.URLField(max_length=500)
     created_at = models.DateTimeField(auto_now=True)
+    post_link_id = models.CharField(max_length=100)
+    post_host = models.CharField(max_length=200)
     def __str__(self):
         return self.post_title + " By " + self.user.username
 
@@ -29,6 +31,8 @@ class UserPost(models.Model):
 class PostVote(models.Model):
      user = models.ForeignKey('auth.User',related_name="my_votes",on_delete=models.CASCADE)
      userpost = models.ForeignKey(UserPost,related_name="votes",on_delete=models.CASCADE)
+     class Meta:
+         unique_together = (("user", "userpost"),)
      def __str__(self):
          return self.userpost.post_title + " By " + self.user.username
      def get_absolute_url(self):

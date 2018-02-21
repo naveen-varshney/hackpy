@@ -111,13 +111,16 @@ class PostDetail(CreateView,DetailView):
 @login_required
 def upvote(request):
     if request.method == "POST":
-        vote = models.PostVote()
-        vote.user = request.user
-        post_id = request.POST.get('post_id', '')
-        print(post_id)
-        vote.userpost = models.UserPost.objects.get(pk=post_id)
-        vote.save()
-        return HttpResponseRedirect(reverse('hackpy_app:index'))
+        try:
+            vote = models.PostVote()
+            vote.user = request.user
+            post_id = request.POST.get('post_id', '')
+            print(post_id)
+            vote.userpost = models.UserPost.objects.get(pk=post_id)
+            vote.save()
+            return HttpResponseRedirect(reverse('hackpy_app:index')) 
+        except Exception as e:
+            return HttpResponseRedirect(reverse('hackpy_app:index'))
     return HttpResponseRedirect(reverse('hackpy_app:index'))
 
 def search(request):
