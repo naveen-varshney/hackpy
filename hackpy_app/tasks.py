@@ -5,19 +5,20 @@ from bs4 import BeautifulSoup
 from .models import UserPost
 from django.contrib.auth.models import User
 from hackpy.celery import app
-from celery import task
+from celery.decorators import periodic_task
+
 #@app.task(bind=True)
 
-# @app.on_after_configure.connect
-# def setup_periodic_tasks(sender, **kwargs):
-#     # Calls test('hello') every 10 seconds.
-#     sender.add_periodic_task(10.0, crawl_task(), name='add every 10')
-#     # Executes every Monday morning at 7:30 a.m.
-#     sender.add_periodic_task(
-#         crontab(hour=9, minute=30),
-#         crawl_task(),
-#     )
-@task(bind=True)
+@app.on_after_configure.connect
+def setup_periodic_tasks(sender, **kwargs):
+    # Calls test('hello') every 10 seconds.
+    sender.add_periodic_task(10.0, crawl_task(), name='add every 10')
+    # Executes every Monday morning at 7:30 a.m.
+    sender.add_periodic_task(
+        crontab(hour=9, minute=30),
+        crawl_task(),
+    )
+@app.task
 def crawl_task():
     request_data = urllib.urlopen("https://news.ycombinator.com/")
     soup = BeautifulSoup(request_data, 'html.parser')

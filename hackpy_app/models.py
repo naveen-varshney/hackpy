@@ -9,7 +9,7 @@ from django.contrib import auth
 # Create your models here.
 
 class User(User):
-    def __str__(self):
+    def __unicode__(self):
         return "@{}".format(self.username)
 
 class UserPost(models.Model):
@@ -20,7 +20,7 @@ class UserPost(models.Model):
     created_at = models.DateTimeField(auto_now=True)
     post_link_id = models.CharField(max_length=100)
     post_host = models.CharField(max_length=200)
-    def __str__(self):
+    def __unicode__(self):
         return self.post_title + " By " + self.user.username
 
     class Meta:
@@ -33,7 +33,7 @@ class PostVote(models.Model):
      userpost = models.ForeignKey(UserPost,related_name="votes",on_delete=models.CASCADE)
      class Meta:
          unique_together = (("user", "userpost"),)
-     def __str__(self):
+     def __unicode__(self):
          return self.userpost.post_title + " By " + self.user.username
      def get_absolute_url(self):
          return reverse('hackpy_app:index')
@@ -48,7 +48,7 @@ class PostComment(models.Model):
     class Meta:
         ordering=['-timestamp']
 
-    def __str__(self):
+    def __unicode__(self):
         return self.comment_text + " By " + self.user.username
 
     def get_absolute_url(self):

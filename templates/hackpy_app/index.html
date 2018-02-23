@@ -8,10 +8,10 @@
 <ol class="list-group">
     {% for post in post_list %}
         <li class="list-group-item" style="margin-bottom:10px;">
-          <form id = "form-id" style="display:inline;" action="{% url 'hackpy_app:vote' %}" method="post">
+          <form id = "form-id{{post.id}}" style="display:inline;" action="{% url 'hackpy_app:vote' %}" method="post">
             {% csrf_token %}
             <input type="hidden" name="post_id" value="{{post.id}}">
-              <a href="#" onclick="document.forms['form-id'].submit();" >
+              <a href="#" onclick="document.forms['form-id{{post.id}}'].submit();" >
                 <span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
                </a>
           </form>

@@ -4,3 +4,6 @@ gunicorn==19.7.1
 psycopg2-binary==2.7.4
 whitenoise==3.3.1
 python-decouple==3.1
+beautifulsoup4==4.6.0
+celery==4.1.0
+redis==2.10.6
