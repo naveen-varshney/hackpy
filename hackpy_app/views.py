@@ -99,7 +99,6 @@ class PostDetail(CreateView,DetailView):
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
-        pdb.set_trace()
         self.object.userpost = models.UserPost.objects.get(pk=self.kwargs['pk'])
         self.object.user = self.request.user
         parent_obj = None
@@ -108,7 +107,7 @@ class PostDetail(CreateView,DetailView):
         except Exception as e:
             self.object.parent = None
         if self.object.parent:
-            parent_qs = PostComment.objects.filter(id=self.object.parent_id)
+            parent_qs = models.PostComment.objects.filter(id=self.object.parent_id)
             if parent_qs.exists():
                 parent_obj = parent_qs.first()
                 self.object.parent = parent_obj
