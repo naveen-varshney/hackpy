@@ -30,11 +30,13 @@
     <div class="">
       <ul class="list-group msg-list">
         {%for com in comments%}
-        <blockquote>
-          <p>{{com.comment_text}}</p>
-          <footer>
-            <a href="#">{{com.user.username}}</a> | {{com.timestamp}}  {% if com.replies.count > 0  %} |  {{ com.replies.count}} Comments  {%endif%} | <a href="#" class="comment-reply-btn">reply</a>
-          </footer>
+          {% if com.is_parent%}
+          <blockquote>
+            <p>{{com.comment_text}}</p>
+            <footer>
+              <a href="#">{{com.user.username}}</a> | {{com.timestamp}}  {% if com.replies.count > 0  %} |  {{ com.replies.count}} Comments  {%endif%} | <a href="#" class="comment-reply-btn">reply</a>
+            </footer>
+          {%endif%}
         <div class="comment-reply" style="display:none; margin-left:20px;">
           {% for reply in com.replies.all %}
             <blockquote>
