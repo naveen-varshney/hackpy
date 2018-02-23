@@ -31,17 +31,28 @@
       <ul class="list-group msg-list">
         {%for com in comments%}
         <blockquote>
-          <small class="text-muted"><a href="#">{{com.user.username}}</a> | <span>{{com.timestamp}}</span> </small>
-          <li class="list-group-item">{{com.comment_text}}</i>
-          </li>
-        </blockquote>
-        {% for reply in com.replies.all %}
-        <blockquote style="margin-left:10px">
-          <small class="text-muted"><a href="#">{{reply.user.username}}</a> | <span>{{reply.timestamp}}</span> </small>
-          <li class="list-group-item">{{reply.comment_text}}</i>
-          </li>
-        </blockquote>
-        {%endfor%}
+          <p>{{com.comment_text}}</p>
+          <footer>
+            <a href="#">{{com.user.username}}</a> | {{com.timestamp}}  {% if com.replies.count > 0  %} |  {{ com.replies.count}} Comments  {%endif%} | <a href="#" class="comment-reply-btn">reply</a>
+          </footer>
+        <div class="comment-reply" style="display:none; margin-left:20px;">
+          {% for reply in com.replies.all %}
+            <blockquote>
+              <p>{{reply.comment_text}}</p>
+              <a href="#">{{reply.user.username}}</a> | {{reply.timestamp}}
+            </blockquote>
+          {%endfor%}
+          <form class="form" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="post_id" value="{{ post_detail.id }}">
+            <input type="hidden" name="parent_id" value="{{com.id}}">
+            {{form}}
+            <div style="margin-top:10px">
+              <input type="submit" name="name" value="Reply" class="btn btn-primary"  id="post_submit">
+            </div>
+          </form>
+        </div>
+      </blockquote>
         {%endfor%}
       </ul>
     </div>
@@ -53,4 +64,11 @@ margin-top: 10px;
 overflow-wrap: break-word;
 }
 </style>
+<script type="text/javascript">
+  $('.comment-reply-btn').click(function(e){
+    e.preventDefault();
+    $(this).parent().next(".comment-reply").fadeToggle();
+
+  })
+</script>
 {%endblock%}

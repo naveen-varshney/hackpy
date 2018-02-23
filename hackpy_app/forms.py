@@ -38,9 +38,7 @@ class UserLoginForm(AuthenticationForm):
 
 class UserCommentForm(forms.ModelForm):
     """docstring for UserCommentForm."""
+    comment_text = forms.CharField(label='',widget=forms.Textarea(attrs={'class':'form-control','placeholder':'Write your comment here....','rows' : '5','col' :'10',}))
     class Meta:
         model = models.PostComment
         fields = ('comment_text',)
-        widgets ={
-        'comment_text': forms.Textarea(attrs={'class':'form-control','rows' : '5','col' :'10','placeholder': 'Write a comment here..'}),
-        }

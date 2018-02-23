@@ -16,7 +16,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-
+import pdb
 # Create your views here.
 class IndexView(ListView):
     """docstring for ."""
@@ -99,8 +99,19 @@ class PostDetail(CreateView,DetailView):
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
+        pdb.set_trace()
         self.object.userpost = models.UserPost.objects.get(pk=self.kwargs['pk'])
         self.object.user = self.request.user
+        parent_obj = None
+        try:
+            self.object.parent_id = int(self.request.POST.get("parent_id"))
+        except Exception as e:
+            self.object.parent = None
+        if self.object.parent:
+            parent_qs = PostComment.objects.filter(id=self.object.parent_id)
+            if parent_qs.exists():
+                parent_obj = parent_qs.first()
+                self.object.parent = parent_obj
         self.object.save()
         form.save()
         return super(PostDetail, self).form_valid(form)
@@ -114,12 +125,13 @@ def upvote(request):
         try:
             vote = models.PostVote()
             vote.user = request.user
-            post_id = request.POST.get('post_id', '')
-            print(post_id)
+            post_id = request.POST.get('post_id')
+            print("pppp"+post_id)
             vote.userpost = models.UserPost.objects.get(pk=post_id)
             vote.save()
-            return HttpResponseRedirect(reverse('hackpy_app:index')) 
+            return HttpResponseRedirect(reverse('hackpy_app:index'))
         except Exception as e:
+            print(e)
             return HttpResponseRedirect(reverse('hackpy_app:index'))
     return HttpResponseRedirect(reverse('hackpy_app:index'))
 
