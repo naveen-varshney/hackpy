@@ -45,7 +45,7 @@ class DeletePost(DeleteView):
 class EditComment(UpdateView):
     """docstring for UpdateView."""
     model = models.PostComment
-    fields = ("post_title","post_link")
+    fields = ("comment_text",)
 
 class DeleteComment(DeleteView):
     """docstring for DeletePost."""
@@ -74,6 +74,7 @@ class PostCreate(LoginRequiredMixin,CreateView):
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.user = self.request.user
+        self.object.post_host = form.cleaned_data['post_link'].split("//")[-1].split("/")[0].split('?')[0]
         self.object.save()
         return super(PostCreate,self).form_valid(form)
 
@@ -144,22 +145,37 @@ def search(request):
     q = request.GET['q']
     vector = SearchVector('post_title')
     query = SearchQuery(q)
-    obj_list = models.UserPost.objects.annotate(rank=SearchRank(vector, query)).order_by('-rank')
+    # post_list = models.UserPost.objects.annotate(rank=SearchRank(vector, query)).order_by('-rank')
+    post_list = models.UserPost.objects.filter(post_title__search=q)
     context={
-    'obj_list' : obj_list
+    'post_list' : post_list
     }
-    return render(request,'hackpy_app/search.html',context)
+    return render(request,'hackpy_app/index.html',context)
 
+def from_site(request,post_host):
+    post_list = models.UserPost.objects.filter(post_host=post_host)
+    context={
+    'post_list' : post_list
+    }
+    return render(request,'hackpy_app/index.html',context)
 #for crawling hackernews homepage
+def get_comment(post,user):
+    request_data = urllib.urlopen("https://news.ycombinator.com/item?id="+post.post_link_id)
+    soup     = BeautifulSoup(request_data, 'html.parser')
+    all_comment = soup.find_all("div", class_="comment")
+    for com in all_comment:
+        post.comments.create(comment_text=com.text,user=user)
+
 def crawl_task():
     request_data = urllib.urlopen("https://news.ycombinator.com/")
-    soup = BeautifulSoup(request_data, 'html.parser')
+    soup     = BeautifulSoup(request_data, 'html.parser')
     all_post = soup.find_all("a", class_="storylink")
-    all_id = soup.find_all("span", class_="age")
+    all_id   = soup.find_all("span", class_="age")
     all_host = soup.find_all("span", class_="sitestr")
-    user = User.objects.get(id="1")
+    user     = User.objects.get(id="1")
     for post,post_id,host in zip(all_post,all_id,all_host):
         extract_id = re.findall('\d+', post_id.next_element.get('href'))[0]
         extract_host = host.text
         if models.UserPost.objects.filter(post_link_id=extract_id).first() is None:
-            models.UserPost.objects.create(user_id=user.id,post_link=post.get('href'),post_title=post.text,post_link_id=extract_id,post_host=extract_host)
+            post = models.UserPost.objects.create(user_id=user.id,post_link=post.get('href'),post_title=post.text,post_link_id=extract_id,post_host=extract_host)
+            get_comment(post,user)

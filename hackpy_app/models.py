@@ -17,9 +17,9 @@ class UserPost(models.Model):
     user = models.ForeignKey('auth.User',related_name="post_user",on_delete=models.CASCADE)
     post_title = models.CharField(max_length=400)
     post_link = models.URLField(max_length=500)
-    created_at = models.DateTimeField(auto_now=True)
-    post_link_id = models.CharField(max_length=100)
-    post_host = models.CharField(max_length=200)
+    created_at = models.DateTimeField(auto_now_add=True)
+    post_link_id = models.CharField(max_length=100,null=True, blank=True)
+    post_host = models.CharField(max_length=200,null=True, blank=True)
     def __unicode__(self):
         return self.post_title + " By " + self.user.username
 
@@ -44,7 +44,7 @@ class PostComment(models.Model):
     user = models.ForeignKey('auth.User',related_name="my_comments",on_delete=models.CASCADE)
     comment_text = models.TextField()
     parent = models.ForeignKey("self", null=True, blank=True,related_name='replies')
-    timestamp = models.DateTimeField(auto_now=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
     class Meta:
         ordering=['-timestamp']
 

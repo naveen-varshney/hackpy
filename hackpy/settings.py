@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'hackpy_app',
     'django.contrib.postgres',
+    'django.contrib.humanize',
 ]
 
 MIDDLEWARE = [

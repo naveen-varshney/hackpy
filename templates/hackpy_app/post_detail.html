@@ -1,4 +1,5 @@
 {%extends 'base.html'%}
+{% load humanize %}
 {%block content%}
 <div class="row">
   <div class="col-md-offset-3 col-md-6">
@@ -10,10 +11,10 @@
             <span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
            </a>
       </form>
-      <a href="{{ post_detail.post_link }}">{{ post_detail.post_title }}</a>
+      <a href="{{ post_detail.post_link }}" class="post_link">{{ post_detail.post_title }}</a>
       <div class="Link-detail">
         <span>{{ post_detail.votes.count }} points</span> |
-        <span>submited by {{ post_detail.user }}</span> |
+        <span>submited by {{ post_detail.user }} {{ post_detail.created_at|naturaltime }}</span> |
         <a class="Link-link" href="{% url 'hackpy_app:post_detail' post_detail.id %}">{{ post_detail.comments.count }} comments</a>
       </div>
     </div>
@@ -34,14 +35,14 @@
           <blockquote>
             <p>{{com.comment_text}}</p>
             <footer>
-              <a href="#">{{com.user.username}}</a> | {{com.timestamp}}  {% if com.replies.count > 0  %} |  {{ com.replies.count}} Comments  {%endif%} | <a href="#" class="comment-reply-btn">reply</a>
+              <a href="#">{{com.user.username}}</a> | {{com.timestamp|naturaltime}}  {% if com.replies.count > 0  %} |  {{ com.replies.count}} Comments  {%endif%} | <a href="#" class="comment-reply-btn">reply</a>
             </footer>
           {%endif%}
         <div class="comment-reply" style="display:none; margin-left:20px;">
           {% for reply in com.replies.all %}
             <blockquote>
               <p>{{reply.comment_text}}</p>
-              <a href="#">{{reply.user.username}}</a> | {{reply.timestamp}}
+              <a href="#">{{reply.user.username}}</a> | {{reply.timestamp|naturaltime}}
             </blockquote>
           {%endfor%}
           <form class="form" method="post">
