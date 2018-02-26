@@ -16,7 +16,7 @@
                 <span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
                </a>
           </form>
-            <a href="{{ post.post_link }}" class="post_link">{{ post.post_title }}</a> (<a href="{%url 'from_site'  post.post_host %}"><span>{{post.post_host}}</span></a>)
+            <a href="{{ post.post_link }}" class="post_link">{{ post.post_title }}</a> (<span>{{post.post_host}}</span>)
             <div class="Link-detail">
                 <span>{{ post.votes.count }} points</span> |
                 <span>submited by {{ post.user }} {{ post.created_at|naturaltime }}</span> |
