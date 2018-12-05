@@ -31,11 +31,14 @@ class IndexView(ListView):
     paginate_by = 30
     template_name = 'hackpy_app/index.html'
     context_object_name='post_list'
+    # def get(self, request, *args, **kwargs):
+    #     import pdb; pdb.set_trace()
 
-class EditPost(UpdateView):
+class EditPost(LoginRequiredMixin,UpdateView):
     """docstring for UpdateView."""
     model = models.UserPost
     fields = ("post_title","post_link")
+    template_name = 'hackpy_app/post_update.html'
 
 class DeletePost(DeleteView):
     """docstring for DeletePost."""

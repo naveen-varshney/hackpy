@@ -1,0 +1,12 @@
+{% extends 'base.html'%}
+{%block content%}
+
+<div class="row">
+  <form class="form" method="post">
+    {%csrf_token%}
+    {{form.as_p}}
+    <input type="submit" name="Post" class="btn btn-default" data-disable="false">
+  </form>
+</div>
+
+{%endblock%}

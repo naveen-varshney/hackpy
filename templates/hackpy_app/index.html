@@ -21,6 +21,10 @@
                 <span>{{ post.votes.count }} points</span> |
                 <span>submited by {{ post.user }} {{ post.created_at|naturaltime }}</span> |
                 <a class="Link-link" href="{% url 'hackpy_app:post_detail' post.id %}">{{ post.comments.count }} comments</a>
+                {%if post.user == request.user%}
+                | <a class="Link-link" href="{% url 'hackpy_app:post_update' post.id %}">edit</a> | 
+                <a class="Link-link" href="{% url 'hackpy_app:post_delete' post.id %}">delete</a>
+                {%endif%}
             </div>
         </li>
     {% endfor %}
