@@ -1,4 +1,4 @@
 # hackpy
 HackerNews modified clone which have nested comments functionality.
-cron run using celery to scrap data from Hackernews site
-Used a basic algorithm to rank the links
+celery is used to scrap data in background from Hackernews site
+Used a basic algorithm to rank the links and used User Authentication etc.
